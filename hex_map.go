@@ -1,19 +1,32 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
+	"strings"
+
+	"github.com/fatih/color"
 )
 
 type HexMap [][]int
+var Hex = [4]string{
+	` /⎺⎺⎺\ `,
+	`/     \`,
+	`\     /`,
+	` \___/ `,
+	// ` /ΞΞΞ\ `,
+	// `//   \\`,
+	// `\\   //`,
+	// ` \ΞΞΞ/ `,
+}
 
 func CreateHexMap (width int, height int) HexMap {
-	hex_map := make(HexMap, width)
-	for x, _ := range hex_map {
+	hexMap := make(HexMap, width)
+	for x, _ := range hexMap {
 		// zero is default value
-		hex_map[x] = make([]int, height)
+		hexMap[x] = make([]int, height)
 	}
 
-	return hex_map
+	return hexMap
 }
 
 /*     ___
@@ -29,32 +42,37 @@ func CreateHexMap (width int, height int) HexMap {
 // Only double digit sizes
 // Width = w*5 + 2 
 // Height = h*4 + 2 + 1 (top)
-func (hex_map HexMap) Sdraw() [][]rune {
-	w := hex_map.Width() * 10 + 5
-	h := hex_map.Height() * 2 + 2 + 1
-	char_map := make([][]rune, h)
-	for i, _ := range char_map {
-		char_map[i] = make([]rune, w)
-		for j, _ := range char_map[i] {
-			char_map[i][j] = ' '
+func (hexMap HexMap) Sdraw() [][]string {
+	w := hexMap.Width() * 10 + 5 + 30
+	h := hexMap.Height() * 2 + 2 + 1 + 30
+	// charMap := make([][]rune, h)
+	
+	charMap := make([][]string, h)
+	for i, _ := range charMap {
+		// charMap[i] = make([]rune, w)
+		charMap[i] = make([]string, w)
+
+		for j, _ := range charMap[i] {
+			charMap[i][j] = " "
 		}
 	}
-	for x, _ := range hex_map {
-		for y, _ := range hex_map[x] {
-			drawHex(char_map, x, y)
+	for x, _ := range hexMap {
+		for y, _ := range hexMap[x] {
+			drawHex(charMap, x, y)
 		}
 	}
-	return char_map
+	return charMap
 }
 
-func (hex_map HexMap) Draw() {
-	char_map := hex_map.Sdraw()
-	DrawCharMap(char_map)
+func (hexMap HexMap) Draw() {
+	charMap := hexMap.Sdraw()
+	DrawCharMap(charMap)
 }
 
-func DrawCharMap(char_map[][]rune) {
-	for k, _ := range char_map {
-		fmt.Println(string(char_map[k]))
+func DrawCharMap(charMap[][]string) {
+	c := color.New(color.FgCyan) //.Add(color.Underline)
+	for k, _ := range charMap {
+		c.Println(strings.Join(charMap[k], ""))
 	}
 }
 
@@ -68,31 +86,68 @@ func ternaryString(condition bool, a string, b string) string {
 	return b
 }
 
-func drawHex(char_map [][]rune, x int, y int) {
-	offset_x := offsetX(x, y)
-	offset_y := offsetY(x, y)
-	// top row
-	char_map[offset_y - 1][offset_x + 2] = '_'
-	char_map[offset_y - 1][offset_x + 3] = '_'
-	char_map[offset_y - 1][offset_x + 4] = '_'
-	// top sides
-	char_map[offset_y    ][offset_x + 1] = '/'
-	char_map[offset_y + 1][offset_x    ] = '/'
-	char_map[offset_y    ][offset_x + 5] = '\\'
-	char_map[offset_y + 1][offset_x + 6] = '\\'
-	// bottom sides
-	char_map[offset_y + 2][offset_x    ] = '\\'
-	char_map[offset_y + 3][offset_x + 1] = '\\'
-	char_map[offset_y + 2][offset_x + 6] = '/'
-	char_map[offset_y + 3][offset_x + 5] = '/'
-	// bottom
-	char_map[offset_y + 3][offset_x + 2] = '_'
-	char_map[offset_y + 3][offset_x + 3] = '_'
-	char_map[offset_y + 3][offset_x + 4] = '_'
-	// writeInHex(char_map, x, y, fmt.Sprintf("%d,%d", x, y))
+func drawHex(charMap [][]string, x int, y int) {
+	var hexColor color.Attribute
+	if x%2 == 0 {
+		hexColor = color.FgCyan
+	} else {
+		hexColor = color.FgMagenta
+	}
+	c := color.New(hexColor) .SprintFunc()
+	xOffset := xOffset(x, y)
+	yOffset := yOffset(x, y)
+
+
+	// // top row
+	// charMap[yOffset - 1][xOffset + 2] = c("_")
+	// // charMap[yOffset - 1][xOffset + 3] = c("_")
+	// charMap[yOffset - 1][xOffset + 4] = c("_")
+	// // top sides
+	// charMap[yOffset    ][xOffset + 1] = c("/")
+	// charMap[yOffset + 1][xOffset    ] = c("/")
+	// charMap[yOffset    ][xOffset + 5] = c("\\")
+	// charMap[yOffset + 1][xOffset + 6] = c("\\")
+	// // bottom sides
+	// charMap[yOffset + 2][xOffset    ] = c("\\")
+	// charMap[yOffset + 3][xOffset + 1] = c("\\")
+	// charMap[yOffset + 2][xOffset + 6] = c("/")
+	// charMap[yOffset + 3][xOffset + 5] = c("/")
+	// // bottom
+	// charMap[yOffset + 3][xOffset + 2] = c("_")
+	// charMap[yOffset + 3][xOffset + 3] = c("_")
+	// charMap[yOffset + 3][xOffset + 4] = c("_")
+	// writeInHex(charMap, x, y, fmt.Sprintf("%d,%d", x, y))
+	
+	subMap := make([][]string, len(Hex))
+	for i, hexLine := range Hex {
+		chars := strings.Split(hexLine, "")
+		subMap[i] = make([]string, len(chars))
+		for j, ch := range chars {
+			subMap[i][j] = ternaryString(ch != " ", c(ch), " ")
+		}
+	}
+	mapDraw(charMap, subMap, xOffset, yOffset)
 }
 
-func writeInHex(char_map [][]rune, x int, y int, str string) {
+type TextPrinter func(...interface{}) string
+func mapDraw(charMap [][]string, subMap[][]string, xOffset int, yOffset int) {
+	for i, _ := range subMap {
+		for j, _ := range subMap[i] {
+			if subMap[i][j] != " " {
+				charMap[yOffset + i][xOffset + j] = subMap[i][j]
+			}
+		}
+	}
+}
+
+func writeInHex(charMap [][]string, x int, y int, str string) {
+	var hexColor color.Attribute
+	if x%2 == 0 {
+		hexColor = color.FgCyan
+	} else {
+		hexColor = color.FgMagenta
+	}
+	c := color.New(hexColor) .SprintFunc()
 	nstr := "" + str
 	if (len(nstr) < 3) { nstr = " " + nstr }
 	if (len(nstr) < 3) { nstr += " " }
@@ -100,27 +155,27 @@ func writeInHex(char_map [][]rune, x int, y int, str string) {
 	nstr = ternaryString(len(nstr) < 3, " ", "") + nstr
 	nstr = nstr + ternaryString(len(nstr) < 3, " ", "")
 	nstr = nstr + ternaryString(len(nstr) < 3, " ", "")
-	offset_x := offsetX(x, y)
-	offset_y := offsetY(x, y)
-	char_map[offset_y + 2][offset_x + 2] = rune(nstr[0])
-	char_map[offset_y + 2][offset_x + 3] = rune(nstr[1])
-	char_map[offset_y + 2][offset_x + 4] = rune(nstr[2])
+	xOffset := xOffset(x, y)
+	yOffset := yOffset(x, y)
+	charMap[yOffset + 2][xOffset + 2] = c(string(nstr[0]))
+	charMap[yOffset + 2][xOffset + 3] = c(string(nstr[1]))
+	charMap[yOffset + 2][xOffset + 4] = c(string(nstr[2]))
 }
 
-func offsetX(x int, y int) int {
-	return ternaryInt(y%2 == 0, 5, 0) + x*10
+func xOffset(x int, y int) int {
+	return ternaryInt(y%2 == 0, 6, 0) + x*12
 }
 
-func offsetY(x int, y int) int {
-	return y*2 + 1 // top row
+func yOffset(_ int, y int) int {
+	return y*2 + 3 // top row
 }
 
-func (hex_map HexMap) Height() int {
-	return len(hex_map[0])
+func (hexMap HexMap) Height() int {
+	return len(hexMap[0])
 }
 
-func (hex_map HexMap) Width() int {
-	return len(hex_map)
+func (hexMap HexMap) Width() int {
+	return len(hexMap)
 }
 
 /*
@@ -142,7 +197,7 @@ func (hex_map HexMap) Width() int {
      \     /
   0,3 \___/ 1,2
 */
-func (hex_map HexMap) Move(x int, y int, move int) [2]int {
+func (hexMap HexMap) Move(x int, y int, move int) [2]int {
 	nX := x
 	nY := y
 	switch move {
@@ -166,8 +221,8 @@ func (hex_map HexMap) Move(x int, y int, move int) [2]int {
 			nY -= 1
 	}
 	
-	if nX < 0 || nX >= hex_map.Width() { nX = x }
-	if nY < 0 || nY >= hex_map.Height() { nY = y }
+	if nX < 0 || nX >= hexMap.Width() { nX = x }
+	if nY < 0 || nY >= hexMap.Height() { nY = y }
 
 	return [2]int{nX, nY}
 }
