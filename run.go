@@ -1,6 +1,8 @@
 package main
 
 import (
+	"dmcblue/dren/models"
+	terminaldisplay "dmcblue/dren/terminal-display"
 	"fmt"
 	"math/rand/v2"
 )
@@ -24,21 +26,27 @@ func run() {
 }
 
 func DrawGameMap() {
-	gm := CreateHexMap(4, 8)
+	player := models.Player{
+		Position: [2]int{2, 2},
+		Turns: 0,
+	}
+	gm := models.CreateHexMap(4, 8)
 	// fmt.Println(gm)
 	// gm.Draw()
-	point := [2]int{2, 2}
-	char_map := gm.Sdraw()
-	writeInHex(char_map, point[0], point[1], "1")
-	// fmt.Println(point)
-	point = gm.Move(point[0], point[1], 1)
-	writeInHex(char_map, point[0], point[1], "2")
-	// fmt.Println(3, point)
-	point = gm.Move(point[0], point[1], 2)
-	writeInHex(char_map, point[0], point[1], "3")
-	// fmt.Println(2, point)
-	point = gm.Move(point[0], point[1], 0)
-	writeInHex(char_map, point[0], point[1], "4")
-	// fmt.Println(0, point)
-	DrawCharMap(char_map)
+	// point := [2]int{2, 2}
+
+	// char_map := terminaldisplay.Sdraw(gm)
+	// terminaldisplay.WriteInHex(char_map, point[0], point[1], "1")
+	// // fmt.Println(point)
+	// player.Position = gm.Move(player.Position, 1)
+	// terminaldisplay.WriteInHex(char_map, point[0], point[1], "2")
+	// // fmt.Println(3, point)
+	// player.Position = gm.Move(player.Position, 2)
+	// terminaldisplay.WriteInHex(char_map, point[0], point[1], "3")
+	// // fmt.Println(2, point)
+	// player.Position = gm.Move(player.Position, 0)
+	// terminaldisplay.WriteInHex(char_map, point[0], point[1], "4")
+	// // fmt.Println(0, point)
+	// terminaldisplay.DrawCharMap(char_map)
+	terminaldisplay.Draw(gm, player)
 }
