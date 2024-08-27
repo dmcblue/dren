@@ -1,7 +1,3 @@
-You awaken in a twilight world, barely lit by a light to the <EAST|WEST|Uberall|fullmoon>.
-
-Fast travel once discovered
-
 ## Let's Talk Combat
 
 Simple system
@@ -18,3 +14,6 @@ You can run away
 Healing items 
   - but like, atmospheric
 
+- KISS
+- How to make decisions meaningful before and during
+- Fateful Presence: Run away (BoP)
