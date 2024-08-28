@@ -11,6 +11,7 @@ import (
 
 const Roll = "roll"
 const Run = "run"
+const UI = "ui"
 
 func help() {
 	messages := [4]string{
@@ -40,6 +41,8 @@ func main() {
 			make_rolls(args[1:])
 		} else if command == Run {
 			run()
+		} else if command == UI {
+			ui()
 		} else {
 			err(fmt.Sprintf("Unknown command '%s'", command))
 		}
