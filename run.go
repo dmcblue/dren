@@ -1,36 +1,27 @@
 package main
 
 import (
-	"dmcblue/dren/models"
+	// "dmcblue/dren/data"
+	// "dmcblue/dren/models"
 	terminaldisplay "dmcblue/dren/terminal-display"
 	"fmt"
-	"math/rand/v2"
+	// "math/rand/v2"
 )
 
-type Barrier string
-const (
-	Sea Barrier = "sea"
-	Mountains Barrier = "mountains"
-	WasteLands Barrier = "waste lands"
-	Mists Barrier = "mists"
-	Desolation Barrier = "desolation"
-)
-var Barriers = [5]Barrier{Sea, Mountains, WasteLands, Mists, Desolation}
+var state gameState
 
 func run() {
-	fmt.Println("North", Barriers[rand.IntN(5)])
-	fmt.Println("East", Barriers[rand.IntN(5)])
-	fmt.Println("South", Barriers[rand.IntN(5)])
-	fmt.Println("West", Barriers[rand.IntN(5)])
-	DrawGameMap()
+	fmt.Println("Setting up game state...")
+	state = newGameState()
+
+	// fmt.Println("North", data.Barriers[rand.IntN(5)])
+	// fmt.Println("East", data.Barriers[rand.IntN(5)])
+	// fmt.Println("South", data.Barriers[rand.IntN(5)])
+	// fmt.Println("West", data.Barriers[rand.IntN(5)])
+	DrawGameMap(state)
 }
 
-func DrawGameMap() {
-	player := models.Player{
-		Position: [2]int{2, 2},
-		Turns: 0,
-	}
-	gm := models.CreateHexMap(4, 8)
+func DrawGameMap(state gameState) {
 	// fmt.Println(gm)
 	// gm.Draw()
 	// point := [2]int{2, 2}
@@ -48,5 +39,10 @@ func DrawGameMap() {
 	// terminaldisplay.WriteInHex(char_map, point[0], point[1], "4")
 	// // fmt.Println(0, point)
 	// terminaldisplay.DrawCharMap(char_map)
-	terminaldisplay.Draw(gm, player)
+	fmt.Printf("To the north, %v\n", state.barriers[0])
+	fmt.Printf("To the east, %v\n", state.barriers[1])
+	fmt.Printf("To the south, %v\n", state.barriers[2])
+	fmt.Printf("To the west, %v\n", state.barriers[3])
+	fmt.Println("Dren:")
+	terminaldisplay.Draw(state.gameMap, state.player)
 }

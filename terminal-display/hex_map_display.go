@@ -4,6 +4,7 @@ import (
 	"dmcblue/dren/models"
 	"dmcblue/dren/utils"
 	"strings"
+	"strconv"
 
 	"github.com/fatih/color"
 )
@@ -14,6 +15,20 @@ func DrawHexMap(canvas Canvas, hexMap models.HexMap) {
 			drawHex(canvas, hexMap[x][y], x, y)
 		}
 	}
+}
+
+func DrawHexMap2(canvas Canvas, hexMap models.HexMap) {
+	for x, _ := range hexMap {
+		for y, _ := range hexMap[x] {
+			xOffset := utils.TernaryInt(y%2 == 0, 1, 0)
+			canvas[y][x*2 + xOffset] = strconv.Itoa(int(hexMap[x][y].Type))
+		}
+	}
+}
+
+func WriteInHex2(canvas Canvas, x int, y int, str string) {
+	xOffset := utils.TernaryInt(y%2 == 0, 1, 0)
+	canvas[y][x*2 + xOffset] = str
 }
 
 var Hex = [4]string{

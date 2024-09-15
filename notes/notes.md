@@ -17,6 +17,7 @@ Fast travel once discovered
   - 2 x D20, x/y coord of Pillar
 - D4 to select Pillar
   - 2 x D8 (- 4), x/y offset from pillar => Player start
+- D? Set up description
 
 ## Tech
 
@@ -87,3 +88,19 @@ Fast travel once discovered
 - hag
 - ship horns
 - Antidiluvian
+- A figure turned away, hand stretched to the right, holding something
+- Blindfolded
+- Hooded figure
+- Figure holding face in hands (IX of Swords)
+- Moon
+- Entropy
+- Sun
+- D&D
+- Blood God
+- Vengeance
+- Loki
+- Ceres
+- Pluto
+- QfG4
+- Fight
+- Undeath

@@ -17,3 +17,6 @@ Healing items
 - KISS
 - How to make decisions meaningful before and during
 - Fateful Presence: Run away (BoP)
+
+Misc:
+- Hex combat only if physics system

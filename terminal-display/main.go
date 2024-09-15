@@ -10,8 +10,8 @@ type Canvas [][]string
 
 func Draw(hexMap models.HexMap, player models.Player) {
 	canvas := CreateCanvas(hexMap)
-	DrawHexMap(canvas, hexMap)
-	DrawPlayer(canvas, player)
+	DrawHexMap2(canvas, hexMap)
+	DrawPlayer2(canvas, player)
 	canvas.Print()
 }
 
