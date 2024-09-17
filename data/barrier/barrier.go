@@ -1,4 +1,4 @@
-package data
+package barrier
 
 type Barrier string
 const (

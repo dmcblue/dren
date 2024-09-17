@@ -16,6 +16,7 @@ import (
 
 type Hex struct {
 	Type hextype.HexType
+	Description string
 }
 type HexMap [][]Hex
 
@@ -92,8 +93,7 @@ func (hexMap HexMap) Move(position Point, move int) [2]int {
 	return [2]int{nX, nY}
 }
 
-func (hexMap HexMap) GetEdges2() [4][]Point {
-	// fmt.Println("GetEdges2")
+func (hexMap HexMap) GetEdges() [4][]Point {
 	w := hexMap.Width()
 	h := hexMap.Height()
 	maxRank := min(w/2, h/2)
@@ -140,11 +140,9 @@ func (hexMap HexMap) GetEdges2() [4][]Point {
 	var current Point
 	for i, mapping := range mappings {
 		foundEdge := false
-		// i := 0
 		current = Point{starts[i][0], starts[i][1]}
-		for !foundEdge /* && i < maxRank */ {
+		for !foundEdge {
 			if mapCopy[current[0]][current[1]] == int(hextype.None) {
-				// i++
 				current[0] = current[0] + mapping[0]
 				current[1] = current[1] + mapping[1]
 			} else {
@@ -159,7 +157,6 @@ func (hexMap HexMap) GetEdges2() [4][]Point {
 		current = queue.Pop()
 		neighbors := hexMap.neighbors(current)
 		len_neighbors := len(neighbors)
-		// fmt.Println("loop: current", current, neighbors)
 
 		if len_neighbors > 0 && len_neighbors < 6 {
 			edge.Add(current)
@@ -167,15 +164,12 @@ func (hexMap HexMap) GetEdges2() [4][]Point {
 			for _, neighbor := range neighbors {
 				if !queue.Has(neighbor) {
 					if mapCopy[neighbor[0]][neighbor[1]] != int(hextype.None) {
-						// if len(hexMap.neighbors(neighbor)) > 0 {
-							queue.Add(neighbor)
-						// }
+						queue.Add(neighbor)
 					}
 				}
 			}
 		}
 	}
-	// fmt.Println("GetEdges2 B", len(edge.Set()))
 
 	// pick edges
 	mX := hexMap.Width()/2
@@ -240,14 +234,12 @@ func abs(x int) int {
 
 func (hexMap HexMap) neighbors(point Point) []Point {
 	moves := [6]int{0, 1, 2, 3, 4, 5}
-	// neighbors := make([]Point, 0)
 	neighborsStruct := CreatePointSet()
 	neighbors := &neighborsStruct
 	for _, move := range moves {
 		newPoint := hexMap.Move(point, move)
 		if !PointEquals(newPoint, point) {
 			if hexMap[newPoint[0]][newPoint[1]].Type != hextype.None {
-				// neighbors = append(neighbors, newPoint)
 				neighbors.Add(newPoint)
 			}
 		}
@@ -260,141 +252,6 @@ func (hexMap HexMap) onEdge(point Point) bool {
 	return point[0] == 0 || point[0] == hexMap.Width() - 1 ||
 		point[1] == 0 || point[1] == hexMap.Height() - 1
 }
-
-
-
-
-
-
-// func (hexMap HexMap) GetEdges() [4][]Point {
-// 	w := hexMap.Width()
-// 	h := hexMap.Height()
-// 	maxRank := min(w/2, h/2)
-// 	edges := [4][]Point{
-// 		make([]Point, w),
-// 		make([]Point, h),
-// 		make([]Point, w),
-// 		make([]Point, h),
-// 	}
-
-// 	noEmpties := false
-// 	rank := 0
-
-// 	for rank < maxRank && !noEmpties {
-// 		noEmpties = true
-// 		horz := [2]int{rank, w - 1 - rank}
-// 		vert := [2]int{rank, h - 1 - rank}
-
-// 		// north
-// 		for i := horz[0]; i < horz[1]; i++ {
-// 			if hexMap[i][rank].Type == hextype.None {
-// 				noEmpties = false
-// 			} else {
-// 				edges[0] = append(edges[0], Point{i, rank})
-// 			}
-// 		}
-// 		// east
-// 		for i := vert[0]; i < vert[1]; i++ {
-// 			if hexMap[w - 1 - rank][i].Type == hextype.None {
-// 				noEmpties = false
-// 			} else {
-// 				edges[1] = append(edges[1], Point{w - 1 - rank, i})
-// 			}
-// 		}
-// 		// south
-// 		for i := horz[0]; i < horz[1]; i++ {
-// 			if hexMap[i][h - 1 - rank].Type == hextype.None {
-// 				noEmpties = false
-// 			} else {
-// 				edges[2] = append(edges[2], Point{i, h - 1 - rank})
-// 			}
-// 		}
-// 		// west
-// 		for i := vert[0]; i < vert[1]; i++ {
-// 			if hexMap[rank][i].Type == hextype.None {
-// 				noEmpties = false
-// 			} else {
-// 				edges[1] = append(edges[1], Point{rank, i})
-// 			}
-// 		}
-
-// 		rank++
-// 	}
-	
-
-// 	return edges
-// }
-
-/*
-    0
-   ___
-5 /   \ 1
- /     \ 
- \     /
-4 \___/ 2
-    3
-*/
-// func (hexMap HexMap) GetEdge(direction int) []Point {
-// 	w := hexMap.Width()
-// 	h := hexMap.Height()
-
-// 	// r := makeRange(0, utils.TernaryInt(direction%2 == 0, w, h))
-// 	// d := utils.TernaryInt(direction%2 == 0, w, h)
-// 	// queue := make([]Point, d)
-// 	// for i := 0; i < d; i++ {
-// 	// 	point := Point{0, 0}
-// 	// 	switch direction {
-// 	// 		case 0:
-// 	// 			point = Point{i, 0}
-// 	// 		case 1:
-// 	// 			point = Point{h - 1, i}
-// 	// 		case 2:
-// 	// 			point = Point{i, w -1}
-// 	// 		case 3:
-// 	// 			point = Point{0, i}
-// 	// 	}
-// 	// 	queue = append(queue, point)
-// 	// }
-
-// 	// for len(queue) > 0 {
-// 	// 	point, queue = queue[0], queue[1:]
-// 	// 	current := Point{point[0], point[1]}
-
-// 	// }
-
-
-
-// 	points := make([][2]int, utils.TernaryInt(direction%2 == 0, w, h))
-// 	// current := [2]int{0, 0}
-// 	// moves := [6]int{5, 0, 1, 2, 3, 4}
-// 	// switch direction {
-// 	// 	case 1: // East
-// 	// 		current = [2]int{w - 1, 0}
-// 	// 		moves = [6]int{1, 2, 3, 4, 5, 0}
-// 	// 	case 2: // South
-// 	// 		current = [2]int{0, h - 1}
-// 	// 		moves = [6]int{4, 3, 2, 1, 0, 5}
-// 	// 	case 3:
-// 	// 		moves = [6]int{5, 4, 3, 2, 1, 0}
-// 	// }
-// 	// points = append(points, [2]int{current[0], current[1]})
-// 	// ended := false
-// 	// for !ended {
-// 	// 	moveIndex := 0
-// 	// 	move := hexMap.Move(current, moves[moveIndex])
-// 	// 	for moveIndex < 6 && PointEquals(current, move) {
-// 	// 		moveIndex++
-// 	// 		move = hexMap.Move(current, moves[moveIndex])
-// 	// 	}
-// 	// 	current = move
-// 	// 	if moveIndex == 6 {
-// 	// 		ended = true
-// 	// 	}
-// 	// 	points = append(points, [2]int{current[0], current[1]})
-// 	// }
-
-// 	return points
-// }
 
 // https://stackoverflow.com/a/39868255
 func makeRange(min, max int) []int {

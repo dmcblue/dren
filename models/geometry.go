@@ -1,11 +1,18 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type Point [2]int
 
 func PointEquals(a Point, b Point) bool {
 	return a[0] == b[0] && a[1] == b[1]
+}
+
+func PointDistance(a Point, b Point) int {
+	return int(math.Round(math.Sqrt(math.Pow(float64(a[0]) - float64(b[0]), 2) + math.Pow(float64(a[1]) - float64(b[1]), 2))))
 }
 
 type UniquePointQueue struct {
